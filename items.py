@@ -3,7 +3,7 @@ class Items:
     def __init__(self, name, category, element, level, worth, chuck, dmg_thrown, stat_effect, use_effect, description):
         self.name = str(name)
         self.category = str(category)  # based on where it goes on the body or drops or potions/food
-        self.ele = str(element)
+        self.element = str(element)
         self.lev = int(level)
         self.wor = int(worth)
         self.chu = bool(chuck)  # can it be thrown
@@ -24,16 +24,26 @@ VW1 = Items("Basic Air Wand", "wand", "air", 0, 50, False, 0, {}, {},
             "A basic fire element wand, it's light and occasionally shocks you")
 DA1 = Items("Mysterious Dark Amulet", "necklace", "dark", 0, 75, False, 0, {}, {},
             "A mysterious silver necklace with a large dark stone, it somehow seems to absorb the light around it")
-LA1 = Items("Mysterious Dark Amulet", "necklace", "dark", 0, 75, False, 0, {}, {},
+LA1 = Items("Mysterious Light Amulet", "necklace", "dark", 0, 75, False, 0, {}, {},
             "A mysterious gold necklace with a large pale stone, it glows with a soft light")
 
 # Wands
 
-# Jewelry
+# Jewelry (necklace, ring, bracelet)
 
-# Clothes
+# Clothes (hat, glasses, coat, shirt, shoes)
 
-# Potions
+# Potions (For ones that attack the enemy of have mroe special effects, link to future effects folder or spells)
+MP1 = Items("Weak Mana Potion", "potion", "none", 0, 25, True, 5, {}, {"mana": 10}, "Restores 10 mana")
+MP2 = Items("Mana Potion", "potion", "none", 3, 50, True, 5, {}, {"mana": 25}, "Restores 25 mana")
+MP3 = Items("Strong Mana Potion", "potion", "none", 5, 100, True, 5, {}, {"mana": 100}, "Restores 100 mana")
+
+HP1 = Items("Weak Health Potion", "potion", "none", 0, 25, True, 5, {}, {"health": 10}, "Restores 10 health")
+HP2 = Items("Health Potion", "potion", "none", 3, 50, True, 5, {}, {"health": 25}, "Restores 25 health")
+HP3 = Items("Strong Health Potion", "potion", "none", 5, 100, True, 5, {}, {"health": 100}, "Restores 100 health")
+
+FP1 = Items("Strong Health Potion", "potion", "none", 7, 150, True, 5, {}, {"mana": 100, "health": 100},
+            "Restores 100 health and 100 mana")
 
 # Drops (Other)
 ROCK1 = Items("Pebble", "misc", "earth", 0, 1, True, 5, {}, {},
@@ -42,3 +52,6 @@ ROCK2 = Items("Rock", "misc", "earth", 0, 3, True, 10, {}, {},
               "A fist-sized rock, why are you carrying this again?")
 ROCK3 = Items("Stone", "misc", "earth", 0, 5, True, 15, {}, {},
               "A melon-seized rock, why and how are you carrying this again?")
+
+# Filler Item
+NO = Items("NO", "NO", "NO", 0, 0, False, 0, {}, {}, "NO")

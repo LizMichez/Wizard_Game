@@ -19,11 +19,12 @@ class Character:
     elementWords = []
     spells = []
 
-    clothes = {"hat": "", "glasses": "", "necklace": "", "coat": "", "shirt": "",
-               "bracelet": "", "ring": "", "wand": "", "pants": "", "shoes": ""}
+    clothes = {"hat": items.NO, "glasses": items.NO, "necklace": items.NO, "coat": items.NO, "shirt": items.NO,
+               "bracelet": items.NO, "ring": items.NO, "wand": items.NO, "pants": items.NO, "shoes": items.NO}
+
     inventory = []
     inventoryCap = 25
-    gold = []
+    gold = 0
 
     level = int()
     experience = int()
@@ -54,15 +55,20 @@ class Character:
         print("Your max mana went up by", 5*boost)
 
     def equip(self, item):  # Attempts to put on an item and gain its status effects
+        if item.element != self.element and item.element != "none":
+            print(self.element)
+            print("You can't wear items of an element that's not yours")
+            return
         for x in self.clothes:
             if item.category == x:
-                if self.clothes[x] == "":
+                if self.clothes[x] == items.NO:
                     self.clothes[x] = item
                     print("\nYou have equip the", item.name)
                     for i in item.stat:
                         self.stats[i] += item.stat[i]
                         print("You gained a", i, "boost of", item.stat[i])
-                    self.inventory.remove(item)
+                    if item in self.inventory:
+                        self.inventory.remove(item)
                     return
                 else:
                     print("You already have an item in this slot, try taking that off and trying again")
@@ -73,7 +79,7 @@ class Character:
         if len(self.inventory) < self.inventoryCap:
             for x in item.stat:
                 self.stats[x] -= item.stat[x]
-            self.clothes[item.category] = ""
+            self.clothes[item.category] = items.NO
             self.inventory.append(item)
             return
         print("Your inventory is too full to hold this item, free up some space then try again")
@@ -88,16 +94,20 @@ class Character:
     def discard(self, item):  # Remove one instance of an item from a players inventory
         self.inventory.remove(item)
 
+    def consume(self):  # NOT DONE
+        print("om nom nom slurp the potion")
+
     def use_spell(self):  # NOT DONE
         print("Ur a wizard harry")
 
     def use_item(self):  # NOT DONE
         print("throw that rock")
 
-    def open_inventory(self):  # NEEDS TO BE CONNECTED TO TOWN and / or Battle and show gold
+    def open_inventory(self):  # NEEDS TO show gold
         print("\nInventory")
+        print("   Gold :", self.gold)
         if len(self.inventory) < 1:
-            print("Your inventory is empty")
+            return
         printed = []
         i = 0
         for x in self.inventory:
@@ -108,7 +118,8 @@ class Character:
         # print("NEED TO HAVE OPTION TO USE AND LEARN MORE ABOUT ITEMS")
 
     def open_stats(self):  # Tells the player their stats
-        print(self.name, "Level:", self.level)
+        print("\n")
+        print(self.name, "- Level:", self.level)
         print("Health", self.health[0], "/", self.health[1])
         print("Mana", self.mana[0], "/", self.mana[1])
         for x in self.stats:
@@ -117,7 +128,7 @@ class Character:
     def open_clothes(self):  # Tells the player what they're wearing
         print("\nClothes")
         for x in self.clothes:
-            if self.clothes[x] == "":
-                print("    ", x, ":", self.clothes[x])
+            if self.clothes[x] == items.NO:
+                print("    ", x, ":")
             else:
-                print("    ", x, ":", items.DA1.name)  # This is bs, fix it so it actually says the item name and not just one that makes u feel better about your failure
+                print("    ", x, ":", self.clothes[x].name)
