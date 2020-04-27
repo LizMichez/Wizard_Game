@@ -39,20 +39,19 @@ class Character:
                 return
 
     def level_up(self):  # Somewhat randomly increases all of a player's stats
-        for x in self.stats:
-            if x == "heal" or "drain":  # certain stats go up by less
-                boost = randint(1, 2)
-                self.stats[x] += boost
-                print("Your", x, "went up by", boost)
-            boost = randint(1, 5)  # most stats go up by 1 - 5
-            self.stats[x] += boost
+        def stat_up(stat, scale, min, max):
+            boost = scale*randint(min, max)
+            stat += boost
             print("Your", x, "went up by", boost)
-        boost = randint(2, 3)  # health goes up by 20 or 30
-        self.health[1] += 10*boost
-        print("Your max health went up by", 10*boost)
-        boost = randint(3, 6)  # mana goes up by multiples of 5 from 15 to 30
-        self.mana[1] += 5*boost
-        print("Your max mana went up by", 5*boost)
+
+        for x in self.stats:
+            if self.element == "light" and x == "heal":  # certain stats go up by less
+                stat_up(self.stats[x], 1, 1, 3)
+            if self.element == "dark" and x == "drain":  # certain stats go up by less
+                stat_up(self.stats[x], 1, 1, 3)
+            stat_up(self.stats[x], 1, 1, 5)
+        stat_up(self.health[1], 10, 2, 3)  # health goes up by 20 or 30
+        stat_up(self.mana[1], 5, 3, 5)  # mana goes up by multiples of 5 from 15 to 25
 
     def equip(self, item):  # Attempts to put on an item and gain its status effects
         if item.element != self.element and item.element != "none":
@@ -94,13 +93,13 @@ class Character:
     def discard(self, item):  # Remove one instance of an item from a players inventory
         self.inventory.remove(item)
 
-    def consume(self):  # NOT DONE
+    def consume(self, item):  # NOT DONE
         print("om nom nom slurp the potion")
 
-    def use_spell(self):  # NOT DONE
+    def use_spell(self, spell):  # NOT DONE
         print("Ur a wizard harry")
 
-    def use_item(self):  # NOT DONE
+    def use_item(self, item):  # NOT DONE
         print("throw that rock")
 
     def open_inventory(self):  # NEEDS TO show gold

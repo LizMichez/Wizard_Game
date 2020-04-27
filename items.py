@@ -33,7 +33,7 @@ LA1 = Items("Mysterious Light Amulet", "necklace", "dark", 0, 75, False, 0, {}, 
 
 # Clothes (hat, glasses, coat, shirt, shoes)
 
-# Potions (For ones that attack the enemy of have mroe special effects, link to future effects folder or spells)
+# Potions (For ones that attack the enemy of have more special effects, link to future effects folder or spells)
 MP1 = Items("Weak Mana Potion", "potion", "none", 0, 25, True, 5, {}, {"mana": 10}, "Restores 10 mana")
 MP2 = Items("Mana Potion", "potion", "none", 3, 50, True, 5, {}, {"mana": 25}, "Restores 25 mana")
 MP3 = Items("Strong Mana Potion", "potion", "none", 5, 100, True, 5, {}, {"mana": 100}, "Restores 100 mana")
@@ -52,6 +52,14 @@ ROCK2 = Items("Rock", "misc", "earth", 0, 3, True, 10, {}, {},
               "A fist-sized rock, why are you carrying this again?")
 ROCK3 = Items("Stone", "misc", "earth", 0, 5, True, 15, {}, {},
               "A melon-seized rock, why and how are you carrying this again?")
+JELLY_C = Items("Clear Jelly", "misc", "none", 0, 15, True, 0, {}, {},
+                "An apple sized ball of clear jelly, useful for cooking and has some medical properties")
+JELLY_S = Items("Silver Jelly", "misc", "none", 0, 25, True, 0, {}, {},
+                "An apple sized ball of silver jelly, useful for potions, cooking and medicine")
+JELLY_G = Items("Gold Jelly", "misc", "none", 0, 50, True, 0, {}, {},
+                "An apple sized ball of gold jelly, useful for potions, cooking, magic, generating mana, and medicine")
+B_CLAW = Items("Bat Claw", "misc", "dark", 0, 20, True, 2, {}, {}, "The claw of a corrupt bat")
+B_WING = Items("Bat Wing", "misc", "dark", 0, 25, True, 0, {}, {}, "The wing of a corrupt bat")
 
 # Filler Item
 NO = Items("NO", "NO", "NO", 0, 0, False, 0, {}, {}, "NO")
