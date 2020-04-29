@@ -53,7 +53,7 @@ AIR_A5 = Spell("Gravity", "air", 15, 100, 175, 0, 0, 0, 0, "Lift opponent up to 
 
 AIR_H1 = Spell("Healing Gust", "air", 9, 35, 15, 0, 0, 35, 0, "Pushes opponents away and surrounds you with pure air")
 
-# Dark
+# Dark (A1, A2, A3, A4, D1, A5)
 DARK_A1 = Spell("Dark Ball", "dark", 0, 10, 15, 0, 10, 0, 0, "Hurl a ball of dark energy")
 DARK_A2 = Spell("Shadow Tether", "dark", 3, 25, 30, 0, 20, 0, 0, "Control opponent through their shadow")
 DARK_A3 = Spell("Shadow Claw", "dark", 6, 35, 50, 0, 0, 0, 0, "Creates tearing claws of shadow")
@@ -62,7 +62,7 @@ DARK_A5 = Spell("Eclipse", "dark", 15, 125, 125, 0, 125, 0, 0, "Blot out the sun
 
 DARK_D1 = Spell("Warp", "dark", 12, 125, 0, 1000, 0, 0, 50, "Teleports you away from opponents attack")
 
-# Light
+# Light (A1, H1, D1, H2, D2, A2)
 LIGHT_A1 = Spell("Light Beam", "light", 0, 10, 25, 0, 0, 0, 0, "Summon a beam of light")
 LIGHT_A2 = Spell("Heaven Ray", "light", 15, 150, 250, 0, 0, 20, 0, "Concentrates all the light in the area into a beam")
 
@@ -82,3 +82,14 @@ class Attack:
         self.defense = defense
         self.recoil = recoil
 
+
+BDSLAM = Attack("Body Slam", 25, 0, 5)
+BITE = Attack("Bite", 20, 0, 0)
+ARROW = Attack("It's bow to fire an arrow", 30, 0, 0)
+SCRATCH = Attack("Scratch", 20, 0, 0)
+SLASH = Attack("Slash", 35, 0, 0)
+STHROW = Attack("Slime Throw", 15, 0, 0)
+HIT = Attack("Punch", 15, 0, 0)
+STAB = Attack("Stab", 30, 0, 0)
+
+BLOCK = Attack("Block", 0, 50, 0)
