@@ -91,5 +91,6 @@ SLASH = Attack("Slash", 35, 0, 0)
 STHROW = Attack("Slime Throw", 15, 0, 0)
 HIT = Attack("Punch", 15, 0, 0)
 STAB = Attack("Stab", 30, 0, 0)
+CLUB = Attack("It's club to hit you", 40, 0, 0)
 
 BLOCK = Attack("Block", 0, 50, 0)

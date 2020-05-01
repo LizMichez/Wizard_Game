@@ -11,6 +11,8 @@ class Character:
         self.health = [health, health]
         self.mana = [energy, energy]
 
+    defBoost = 0
+
     gender = ""
     race = ""
     name = ""
@@ -39,8 +41,8 @@ class Character:
                 return
 
     def level_up(self):  # Somewhat randomly increases all of a player's stats
-        def stat_up(stat, scale, min, max):
-            boost = scale*randint(min, max)
+        def stat_up(stat, scale, bot, top):
+            boost = scale*randint(bot, top)
             stat += boost
             print("Your", x, "went up by", boost)
 
@@ -50,9 +52,10 @@ class Character:
             if self.element == "dark" and x == "drain":  # certain stats go up by less
                 stat_up(self.stats[x], 1, 1, 3)
             stat_up(self.stats[x], 1, 1, 5)
-        stat_up(self.health[1], 10, 2, 3)  # health goes up by 20 or 30
-        stat_up(self.mana[1], 5, 3, 5)  # mana goes up by multiples of 5 from 15 to 25
+        stat_up(self.health[1], 10, 2, 3)  # max health goes up by 20 or 30
+        stat_up(self.mana[1], 5, 3, 5)  # max mana goes up by multiples of 5 from 15 to 25
 
+# Items / clothes related
     def equip(self, item):  # Attempts to put on an item and gain its status effects
         if item.element != self.element and item.element != "none":
             print(self.element)
@@ -74,7 +77,7 @@ class Character:
                     return
         print("Item could not be equipped")
 
-    def stip(self, item):  # Takes off an item, removes its status effects, and puts it in the players inventory
+    def strip(self, item):  # Takes off an item, removes its status effects, and puts it in the players inventory
         if len(self.inventory) < self.inventoryCap:
             for x in item.stat:
                 self.stats[x] -= item.stat[x]
@@ -92,16 +95,99 @@ class Character:
 
     def discard(self, item):  # Remove one instance of an item from a players inventory
         self.inventory.remove(item)
+        print("You have discarded the", item.name)
+
+# Battle  and / or stat things
+    def restore(self, lestat, amount, prints):  # Restore some health or mana without going over the max
+        lestat[0] += amount
+        if lestat[0] > lestat[1]:
+            lestat[0] = lestat[1]
+            if prints:
+                print("You now have full", lestat)
+        else:
+            if prints:
+                print("You restored", amount, lestat)
 
     def consume(self, item):  # NOT DONE
-        print("om nom nom slurp the potion")
+        if item.use:
+            for x in item.use:
+                if x == "health":
+                    self.restore(self.health, item.use[x], True)
+                elif x == "mana":
+                    self.restore(self.mana, item.use[x], True)
+                else:
+                    self.stats[x] += item.use[x]
+        else:
+            print("There's nothing to do with this item, you look at it sadly")
 
-    def use_spell(self, spell):  # NOT DONE
-        print("Ur a wizard harry")
+    def use_spell(self, spell, enemy):  # NOT DONE
+        print("You cast", spell.name, "!")
+        if self.mana < spell.mana:
+            print("You do not have enough mana to complete this spell, you just wave your wand and look like an idiot")
+            return
+        self.mana -= spell.mana
+        if spell.base_dam > 0:  # Attack section
+            hit = randint(0, 101)
+            if hit < 35 - int(self.stats["accuracy"]*0.5):
+                print("You missed the", enemy.name, "!")
+            elif hit > 90 - int(self.stats["luck"]*0.5):
+                damage = spell.base_dam + self.stats["magic"]
+                enemy.health[0] -= damage
+                print("You did", damage, "damage")
+                self.restore(self.health, int(damage * 0.01 * (self.stats["drain"]+spell.drain)), False)
+            else:
+                damage = spell.base_dam + self.stats["magic"] - enemy.defBoost
+                if damage > 0:
+                    enemy.health[0] -= damage
+                    print("You did", damage, "damage")
+                    self.restore(self.health, int(damage*0.01*(self.stats["drain"]+spell.drain)), False)
+                else:
+                    print("The enemy defended against the attack, it did no damage")
 
-    def use_item(self, item):  # NOT DONE
-        print("throw that rock")
+        if spell.healing > 0:  # Healing section
+            self.health += spell.healing + self.stats["heal"]
+            print("You restored", spell.healing + self.stats["heal"], "health.")
 
+        if spell.recoil > 0:  # Recoil section
+            if spell.recoil - int(0.5*self.stats["intel"]) > 0:
+                self.health[0] -= spell.recoil - self.stats["intel"]
+                print("The recoil did")
+            else:
+                print("You were able to avoid the recoil")
+
+        if spell.base_def > 0:  # Defense section
+            self.defBoost += spell.base_def + self.stats["defense"]
+
+    def use_attack(self, attack, enemy):
+        damage = attack.base_dam + int(0.5*self.stats["strength"]) - enemy.defBoost
+        if damage > 0:
+            enemy.health[0] -= damage
+            print("You did", damage, "damage")
+        else:
+            print("The enemy defended against the attack, it did no damage")
+
+        if attack.base_def > 0:  # Defense section
+            self.defBoost += attack.base_def + self.stats["defense"]
+
+        if attack.recoil > 0:  # Recoil section
+            if attack.recoil - int(0.5*self.stats["intel"]) > 0:
+                self.health[0] -= attack.recoil - self.stats["intel"]
+                print("The recoil did")
+            else:
+                print("You were able to avoid the recoil")
+
+    def throw(self, item, enemy):  # Throws an item at the opponent
+        if item.chu:
+            if int(item.dth*0.5*self.stats["strength"]) > enemy.stats["defense"]:
+                enemy.health -= int(item.dth*0.5*self.stats["strength"]) - enemy.stats["defense"]
+                print("You threw the", item.name, "! \n It did", item.dth, "damage.")
+                return
+            else:
+                print("You threw the", item.name, "! \n It did no damage. Pathetic.")
+                return
+        print("You can't throw this dummy!")
+
+# Viewing information
     def open_inventory(self):  # NEEDS TO show gold
         print("\nInventory")
         print("   Gold :", self.gold)

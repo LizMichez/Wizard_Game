@@ -1,1 +1,1 @@
-# should include shops, gossip, training, crafting, and possibly events
+# should include shops, school, gossip, training, crafting, quests, and possibly events

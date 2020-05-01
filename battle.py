@@ -24,6 +24,8 @@ class Monsters:
         self.description = des
         self.drops = drops
 
+    defBoost = 0
+
 
 # Forest / Basic Monsters
 SLIME = Monsters("Slime", "none", 10, 50, 0, [s.STHROW, s.BDSLAM], 0, 5, 3, 5, 5, 0, 1, 0, 10,
@@ -66,7 +68,7 @@ ASPIRIT = Monsters("Air Spirit", "air", 75, 200, 150, [s.AIR_A1, s.AIR_A2, s.AIR
 LSPIRIT = Monsters("Light Spirit", "light", 75, 200, 150, [s.LIGHT_A1, s.LIGHT_H1, s.LIGHT_D1], 30, 5, 5, 20, 30, 20,
                    30, 25, 0, [i.ROCK1, i.L_GEM],
                    "A being made from pure mana, thought to be the spirit of an ancient mage")
-GOBLIN = Monsters("Goblin", "dark", 150, 200, 100, [], 15, 15, 10, 30, 20, 5, 25, 0, 20,
+GOBLIN = Monsters("Goblin", "dark", 150, 200, 100, [s.SCRATCH, s.SLASH, s.DARK_A3], 15, 15, 10, 30, 20, 5, 25, 0, 20,
                   [i.ROCK2, i.GEM, i.B1, i.B2, i.A2], "A twisted dark creature with a wicked sense of humor")
 GIANT = Monsters("Giant", "none", 200, 300, 0, [s.HIT, s.BDSLAM], 0, 40, 30, 20, 20, 10, 15, 0, 0,
                  [i.ROCK3], "A large, aggressive, humanoid")
@@ -75,11 +77,14 @@ GIANT_B = Monsters("Giant Soldier", "none", 300, 400, 0, [s.HIT, s.BDSLAM, s.STA
                    "A very large, very aggressive, very armed, humanoid. Who looks angry.")
 
 # Cave Monsters
-# TROLL = Monsters("Troll", "none")
-# DLIZARD = Monsters("Dragon Lizard", "fire")
-# DRAGON = Monsters("Small Dragon", "fire")
-#
-# # Event Monsters
-# THIEF = Monsters("Thief", "none")
-# DRAGON_B = Monsters("Azeroth : Light Bringer", "light")
+TROLL = Monsters("Troll", "none", 100, 225, 0, [s.SLASH, s.BDSLAM, s.CLUB], 0, 40, 35, 20, 25, 30, 40, 0, 0,
+                 [i.ROCK2, i.ROCK3], "A twisted humanoid creature, well known for its riddles")
+DLIZARD = Monsters("Dragon Lizard", "fire", 200, 200, 300, [s.FIRE_A1, s.SLASH, s.FIRE_A2], 35, 30, 35, 40, 30, 20, 25,
+                   0, 0, [i.F_GEM, i.GEM], "A cross between a dragon and a lizard")
+DRAGON = Monsters("Mature Dragon", "fire", 300, 250, 400, [s.FIRE_A1, s.FIRE_H1, s.FIRE_A2, s.FIRE_A3], 50, 40, 35, 40,
+                  30, 50, 35, 40, 0, [i.F_GEM, i.GEM, i.D_WING, i.D_CLAW, i.D_TAIL], "A mighty fire dragon")
 
+# Event Monsters (specific drops / attacks)
+# THIEF = Monsters("Thief", ele, gold, health, mana, attacks,
+#                  mag, stre, defe, spe, acc, luck, intel, heal, drain, drops, des)
+# DRAGON_B = Monsters("Azeroth : Light Bringer", "light")

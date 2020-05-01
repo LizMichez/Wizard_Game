@@ -72,6 +72,9 @@ B_CLAW = Items("Bat Claw", "misc", "dark", 0, 20, True, 2, {}, {}, "The claw of 
 B_WING = Items("Bat Wing", "misc", "dark", 0, 25, True, 0, {}, {}, "The wing of a corrupt bat, it oozes darkness")
 R_CLAW = Items("Bat Claw", "misc", "none", 0, 25, True, 4, {}, {}, "The claw of a swamp rat")
 R_TAIL = Items("Bat Wing", "misc", "none", 0, 30, True, 2, {}, {}, "The wing of a swamp rat")
+D_WING = Items("Dragon Wing", "misc", "none", 0, 50, True, 10, {}, {}, "The wing material of a dragon")
+D_CLAW = Items("Dragon Claw", "misc", "none", 0, 75, True, 15, {}, {}, "The claw of a dragon, about the size of a rat")
+D_TAIL = Items("Dragon Tail", "misc", "none", 0, 100, True, 25, {}, {}, "The tail of a dragon aka chunk of magic meat")
 
 GEM = Items("Gem", "misc", "none", 0, 50, True, 10, {}, {}, "A colourless gem infused with no magic")
 C_GEM = Items("Corrupt Gem", "misc", "dark", 3, 40, True, 10, {}, {}, "A black gem infused with dark magic")
@@ -80,6 +83,7 @@ W_GEM = Items("Water Gem", "misc", "water", 3, 45, True, 10, {}, {}, "A blue gem
 E_GEM = Items("Earth Gem", "misc", "earth", 3, 45, True, 10, {}, {}, "A brown-green gem infused with earth magic")
 A_GEM = Items("Air Gem", "misc", "air", 3, 45, True, 10, {}, {}, "A white gem infused with air magic")
 L_GEM = Items("Light Gem", "misc", "light", 3, 45, True, 10, {}, {}, "A glowing gem infused with light magic")
+
 
 # Filler Item
 NO = Items("NO", "NO", "NO", 0, 0, False, 0, {}, {}, "NO")
