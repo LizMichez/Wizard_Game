@@ -151,7 +151,7 @@ class Character:
         if spell.recoil > 0:  # Recoil section
             if spell.recoil - int(0.5*self.stats["intel"]) > 0:
                 self.health[0] -= spell.recoil - self.stats["intel"]
-                print("The recoil did")
+                print("The recoil did", spell.recoil - self.stats["intel"], "damage")
             else:
                 print("You were able to avoid the recoil")
 

@@ -24,7 +24,7 @@ VW1 = Items("Basic Air Wand", "wand", "air", 0, 100, False, 0, {}, {},
             "A basic fire element wand, it's light and occasionally shocks you")
 DA1 = Items("Mysterious Dark Amulet", "necklace", "dark", 0, 125, False, 0, {}, {},
             "A mysterious silver necklace with a large dark stone, it somehow seems to absorb the light around it")
-LA1 = Items("Mysterious Light Amulet", "necklace", "dark", 0, 125, False, 0, {}, {},
+LA1 = Items("Mysterious Light Amulet", "necklace", "light", 0, 125, False, 0, {}, {},
             "A mysterious gold necklace with a large pale stone, it glows with a soft light")
 
 # Wands

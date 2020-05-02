@@ -1,90 +1,47 @@
-# make sequence for battling, define monster class and variations of the classes
-import items
-import spells
-s = spells
-i = items
+import player
+import monsters
 
 
-def battle():
-    print("Dun dun duun dun du du dun du du du")
+def battle(player, enemy):
+    print("You have encountered a", enemy.name, "!")
+    while player.health[0] and enemy.health[0] > 0:
+        print("Your Stats:    health [", player.health[0], "/", player.health[1], "] mana    [", player.mana[0],
+              "/", player.mana[1], "]\nEnemy Health:", enemy.health[0])
 
 
-class Monsters:
-    def __init__(self, name, ele, gold, health, mana, attacks,
-                 mag, stre, defe, spe, acc, luck, intel, heal, drain, drops, des):
-        self.name = name
-        self.element = ele
-        self.gold = gold
+def player_turn(player, enemy):
+    while True:
+        while True:
+            choice = input("Will you?\n   1.Run\n   2.Use a spell\n   3.Open Inventory\n   4.View Stats\n   5.Hit it")
+            if choice not in range(1, 6):
+                print("Please enter a valid input, that means a number, from 1 to 5, it's not hard")
+            else:
+                break
 
-        self.health = [health, health]
-        self.mana = [mana, mana]
-        self.attacks = attacks
-        self.stats = {"magic": mag, "strength": stre, "defense": defe, "speed": spe,
-                      "accuracy": acc, "luck": luck, "intel": intel, "heal": heal, "drain": drain}
-        self.description = des
-        self.drops = drops
+        if choice == 1:
+            if player.stats["speed"] > enemy.stats["speed"]:
+                print("You got away.")
+                return "ran"
+            else:
+                print("You couldn't escape!")
 
-    defBoost = 0
+        if choice == 2:
+            while True:
+                print("What spell will you use?")
+                for x in player.spells:
+                    print("   ", player.spells.index(x) + 1, ".", x.name)
+                while True:
+                    try:
+                        spell = int(input())
+                        break
+                    except TypeError:
+                        print("Enter the number corresponding to the spell you want to use")
+                if spell not in range(1, len(player.spells)):
+                        print("....The number has to be an actual spell, try again")
+                else:
+                    break
+            player.use_spell(player.spells[spell-1], enemy)
 
 
-# Forest / Basic Monsters
-SLIME = Monsters("Slime", "none", 10, 50, 0, [s.STHROW, s.BDSLAM], 0, 5, 3, 5, 5, 0, 1, 0, 10,
-                 [i.ROCK1, i.JELLY_C, i.JELLY_S, i.JELLY_G], "An aggressive little ball of jelly")
-SLIME_B = Monsters("Slime", "none", 30, 100, 0, [s.STHROW, s.BDSLAM], 0, 15, 5, 4, 5, 5, 5, 0, 30,
-                   [i.ROCK2, i.JELLY_S, i.JELLY_G], "A very aggressive big ball of jelly")
-CBAT = Monsters("Corrupt Bat", "dark", 5, 75, 50, [s.BITE, s.SCRATCH, s.DARK_A1], 10, 3, 2, 20, 10, 2, 2, 0, 25,
-                [i.B_CLAW, i.B_WING], "A bat that had an encounter with dark magic")
-
-# Swamp Monsters
-SWAMP_RAT = Monsters("Swamp Rat", "none", 15, 100, 0, [s.BITE, s.SCRATCH], 0, 10, 7, 10, 7, 0, 5, 0, 0,
-                     [i.ROCK1, i.R_CLAW, i.R_TAIL], "A large rat that lives mainly in swamps")
-SWAMP_RAT_B = Monsters("Swamp Rat", "earth", 45, 200, 50, [s.BITE, s.SCRATCH, s.EARTH_A1], 5, 20, 10, 10, 7, 0, 5, 0, 0,
-                       [i.ROCK2, i.R_CLAW, i.R_TAIL], "The leader of a pack of rats that lives in swamps")
-UNDEAD_1 = Monsters("Undead", "dark", 50, 150, 50, [s.BITE, s.DARK_A1, s.HIT], 10, 10, 10, 5, 10, 5, 10, 0, 20,
-                    [i.ROCK2, i.C_GEM, i.R1],
-                    "An moving corpse, it appears to have been reanimated through necromancy")
-UNDEAD_2 = Monsters("Undead Archer", "dark", 50, 150, 50, [s.ARROW, s.DARK_A1], 10, 10, 10, 5, 10, 5, 15, 0, 20,
-                    [i.ROCK1, i.C_GEM, i.B1],
-                    "A moving corpse, it appears to have been reanimated through necromancy")
-UNDEAD_3 = Monsters("Undead Sorcerer", "dark", 75, 100, 150, [s.DARK_A1, s.DARK_A2, s.DARK_A3], 20, 5, 2, 5, 10, 10, 15,
-                    0, 25, [i.ROCK2, i.C_GEM, i.A1],
-                    "The moving corpse of a once dead sorcerer, it's magic has become corrupt")
-UNDEAD_B = Monsters("Undead Captain", "dark", 100, 300, 100, [s.STAB, s.DARK_A1, s.DARK_A2], 15, 15, 15, 3, 10, 5, 20,
-                    0, 20, [i.ROCK2, i.C_GEM, i.B2], "The reanimated corpse of a long dead adventurer")
-
-# Mountain Monsters
-FSPIRIT = Monsters("Fire Spirit", "fire", 75, 200, 150, [s.FIRE_A1, s.FIRE_A2, s.FIRE_H1], 30, 5, 5, 20, 30, 20, 30, 25,
-                   0, [i.ROCK1, i.F_GEM],
-                   "A being made from pure mana, thought to be the spirit of an ancient mage")
-WSPIRIT = Monsters("Water Spirit", "water", 75, 200, 150, [s.WATER_A1, s.WATER_A2, s.WATER_H1], 30, 5, 5, 20, 30, 20,
-                   30, 25, 0, [i.ROCK1, i.W_GEM],
-                   "A being made from pure mana, thought to be the spirit of an ancient mage")
-ESPIRIT = Monsters("Earth Spirit", "earth", 75, 200, 150, [s.EARTH_A1, s.EARTH_D1, s.EARTH_A2], 30, 5, 5, 20, 30, 20,
-                   30, 25, 0, [i.ROCK1, i.E_GEM],
-                   "A being made from pure mana, thought to be the spirit of an ancient mage")
-ASPIRIT = Monsters("Air Spirit", "air", 75, 200, 150, [s.AIR_A1, s.AIR_A2, s.AIR_A3], 30, 5, 5, 20, 30, 20, 30, 25, 0,
-                   [i.ROCK1, i.A_GEM],
-                   "A being made from pure mana, thought to be the spirit of an ancient mage")
-LSPIRIT = Monsters("Light Spirit", "light", 75, 200, 150, [s.LIGHT_A1, s.LIGHT_H1, s.LIGHT_D1], 30, 5, 5, 20, 30, 20,
-                   30, 25, 0, [i.ROCK1, i.L_GEM],
-                   "A being made from pure mana, thought to be the spirit of an ancient mage")
-GOBLIN = Monsters("Goblin", "dark", 150, 200, 100, [s.SCRATCH, s.SLASH, s.DARK_A3], 15, 15, 10, 30, 20, 5, 25, 0, 20,
-                  [i.ROCK2, i.GEM, i.B1, i.B2, i.A2], "A twisted dark creature with a wicked sense of humor")
-GIANT = Monsters("Giant", "none", 200, 300, 0, [s.HIT, s.BDSLAM], 0, 40, 30, 20, 20, 10, 15, 0, 0,
-                 [i.ROCK3], "A large, aggressive, humanoid")
-GIANT_B = Monsters("Giant Soldier", "none", 300, 400, 0, [s.HIT, s.BDSLAM, s.STAB, s.SLASH], 0, 60, 40, 15, 25, 10, 20,
-                   0, 0, [i.ROCK3],
-                   "A very large, very aggressive, very armed, humanoid. Who looks angry.")
-
-# Cave Monsters
-TROLL = Monsters("Troll", "none", 100, 225, 0, [s.SLASH, s.BDSLAM, s.CLUB], 0, 40, 35, 20, 25, 30, 40, 0, 0,
-                 [i.ROCK2, i.ROCK3], "A twisted humanoid creature, well known for its riddles")
-DLIZARD = Monsters("Dragon Lizard", "fire", 200, 200, 300, [s.FIRE_A1, s.SLASH, s.FIRE_A2], 35, 30, 35, 40, 30, 20, 25,
-                   0, 0, [i.F_GEM, i.GEM], "A cross between a dragon and a lizard")
-DRAGON = Monsters("Mature Dragon", "fire", 300, 250, 400, [s.FIRE_A1, s.FIRE_H1, s.FIRE_A2, s.FIRE_A3], 50, 40, 35, 40,
-                  30, 50, 35, 40, 0, [i.F_GEM, i.GEM, i.D_WING, i.D_CLAW, i.D_TAIL], "A mighty fire dragon")
-
-# Event Monsters (specific drops / attacks)
-# THIEF = Monsters("Thief", ele, gold, health, mana, attacks,
-#                  mag, stre, defe, spe, acc, luck, intel, heal, drain, drops, des)
-# DRAGON_B = Monsters("Azeroth : Light Bringer", "light")
+def enemy_turn():
+    print("rawr")
