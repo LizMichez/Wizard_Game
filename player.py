@@ -1,6 +1,8 @@
+#  This file contains all functions and statistics related to the character class (main player capabilities)
+#  These functions include : exp_gain, level_up, equip, strip, acquire, discard, restore, consume, use_spell, use_attack
+#                            throw, open_inventory, open_stats, open_clothes
+# PROBLEMS (MANY) WITH LEVEL_UP!!
 import items
-# import spells
-
 from random import randint
 
 
@@ -35,7 +37,7 @@ class Character:
         self.experience += int(exp)
         for x in range(4, 100):
             if x**2 < self.experience < (x+1)**2 and x != self.level:
-                self.level = int(x)
+                self.level = int(x - 4)
                 print("Congratulations! You are now level", str(self.level) + "!")
                 self.level_up()
                 return
@@ -55,10 +57,16 @@ class Character:
         stat_up(self.health[1], 10, 2, 3)  # max health goes up by 20 or 30
         stat_up(self.mana[1], 5, 3, 5)  # max mana goes up by multiples of 5 from 15 to 25
 
+    def learn_spell(self, spell):
+        if spell not in self.spells:
+            print("You learned", spell.name, "!")
+            self.spells.append(spell)
+        else:
+            print("You already know that spell!")
+
 # Items / clothes related
     def equip(self, item):  # Attempts to put on an item and gain its status effects
         if item.element != self.element and item.element != "none":
-            print(self.element)
             print("You can't wear items of an element that's not yours")
             return
         for x in self.clothes:
@@ -122,10 +130,10 @@ class Character:
 
     def use_spell(self, spell, enemy):  # NOT DONE
         print("You cast", spell.name, "!")
-        if self.mana < spell.mana:
+        if self.mana[0] < spell.mana:
             print("You do not have enough mana to complete this spell, you just wave your wand and look like an idiot")
             return
-        self.mana -= spell.mana
+        self.mana[0] -= spell.mana
         if spell.base_dam > 0:  # Attack section
             hit = randint(0, 101)
             if hit < 35 - int(self.stats["accuracy"]*0.5):
@@ -145,7 +153,7 @@ class Character:
                     print("The enemy defended against the attack, it did no damage")
 
         if spell.healing > 0:  # Healing section
-            self.health += spell.healing + self.stats["heal"]
+            self.health[0] += spell.healing + self.stats["heal"]
             print("You restored", spell.healing + self.stats["heal"], "health.")
 
         if spell.recoil > 0:  # Recoil section
@@ -159,15 +167,15 @@ class Character:
             self.defBoost += spell.base_def + self.stats["defense"]
 
     def use_attack(self, attack, enemy):
-        damage = attack.base_dam + int(0.5*self.stats["strength"]) - enemy.defBoost
+        damage = int(attack.damage/2) + int(0.5*self.stats["strength"]) - enemy.defBoost
         if damage > 0:
             enemy.health[0] -= damage
             print("You did", damage, "damage")
         else:
             print("The enemy defended against the attack, it did no damage")
 
-        if attack.base_def > 0:  # Defense section
-            self.defBoost += attack.base_def + self.stats["defense"]
+        if attack.defense > 0:  # Defense section
+            self.defBoost += attack.defense + self.stats["defense"]
 
         if attack.recoil > 0:  # Recoil section
             if attack.recoil - int(0.5*self.stats["intel"]) > 0:
@@ -177,13 +185,15 @@ class Character:
                 print("You were able to avoid the recoil")
 
     def throw(self, item, enemy):  # Throws an item at the opponent
-        if item.chu:
+        if item.chu:  # if the item is chuckable
             if int(item.dth*0.5*self.stats["strength"]) > enemy.stats["defense"]:
                 enemy.health -= int(item.dth*0.5*self.stats["strength"]) - enemy.stats["defense"]
                 print("You threw the", item.name, "! \n It did", item.dth, "damage.")
+                self.discard(item)
                 return
             else:
                 print("You threw the", item.name, "! \n It did no damage. Pathetic.")
+                self.discard(item)
                 return
         print("You can't throw this dummy!")
 

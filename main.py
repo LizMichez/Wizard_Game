@@ -1,7 +1,12 @@
 import player
 import items
 # import text
-# import battle
+import battle
+b = battle
+import monsters
+m = monsters
+import spells
+s = spells
 # import town
 
 # runs story and literally everything
@@ -11,9 +16,13 @@ P1.name = "Bean"
 P1.element = "dark"
 
 P1.acquire(items.DA1)
+P1.acquire(items.ROCK2)
+P1.acquire(items.ROCK3)
 P1.open_inventory()
 P1.equip(items.LA1)
 P1.equip(items.DA1)
 P1.open_inventory()
 P1.open_clothes()
 P1.open_stats()
+P1.learn_spell(s.DARK_A1)
+b.battle(P1, m.SLIME)

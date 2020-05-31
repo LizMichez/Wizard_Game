@@ -85,12 +85,12 @@ class Attack:
 
 BDSLAM = Attack("Body Slam", 25, 0, 5)
 BITE = Attack("Bite", 20, 0, 0)
-ARROW = Attack("It's bow to fire an arrow", 30, 0, 0)
+ARROW = Attack("it's bow to fire an arrow", 30, 0, 0)
 SCRATCH = Attack("Scratch", 20, 0, 0)
 SLASH = Attack("Slash", 35, 0, 0)
 STHROW = Attack("Slime Throw", 15, 0, 0)
 HIT = Attack("Punch", 15, 0, 0)
 STAB = Attack("Stab", 30, 0, 0)
-CLUB = Attack("It's club to hit you", 40, 0, 0)
+CLUB = Attack("it's club to hit you", 40, 0, 0)
 
 BLOCK = Attack("Block", 0, 50, 0)
