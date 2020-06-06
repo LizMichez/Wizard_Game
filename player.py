@@ -99,6 +99,7 @@ class Character:
                 self.stats[x] -= item.stat[x]
             self.clothes[item.category] = items.NO
             self.inventory.append(item)
+            print("You have removed the", item.name, "and placed it in your inventory.")
             return
         print("Your inventory is too full to hold this item, free up some space then try again")
 
@@ -207,6 +208,20 @@ class Character:
                 return
         print("You can't throw this dummy!")
 
+    def sleep(self):
+        dream = int((self.health[0]/self.health[0])*10)
+        if dream >= 9:
+            print("You went to sleep and had a great dream.... which of course you cant remember.")
+        elif dream >= 5:
+            print("You went to sleep.")
+        elif dream >= 2:
+            print("You collapsed into bed and slept like a rock... if rocks could sleep.")
+        else:
+            print("You just made it to bed and collapsed into a sleep plagued with nightmares.")
+
+        self.restore(self.health, self.health[1], True)
+        self.restore(self.mana, self.mana[1], True)
+
 # Viewing information
     def open_inventory(self):  # NEEDS TO show gold
         chuck = False
@@ -263,9 +278,35 @@ class Character:
             print(x, self.stats[x])
 
     def open_clothes(self):  # Tells the player what they're wearing
+        clotheson = []
         print("\nClothes")
         for x in self.clothes:
             if self.clothes[x] == items.NO:
                 print("    ", x, ":")
             else:
                 print("    ", x, ":", self.clothes[x].name)
+                clotheson.append(x)
+        if not state == "Battle":
+            while True:
+                choose = input("Do you want to change? (Y/N) : ")
+                if choose == "y" or choose == "Y":
+                    while True:
+                        print("\nYou are wearing:")
+                        for x in clotheson:
+                            print("     "+str(clotheson.index(x)+1)+".", self.clothes[x].name)
+                        try:
+                            chooses = int(input("Select an item: "))
+                            print("Do you want to remove the", self.clothes[clotheson[chooses-1]].name, "? (Y/N)")
+                            choosess = input()
+                            if choosess == "y" or choosess == "Y":
+                                self.strip(self.clothes[clotheson[chooses-1]])
+                                break
+                            elif choosess == "n" or choosess == "N":
+                                break
+                        except (TypeError, ValueError, IndexError) as e:
+                            print("You know you have to enter a number of an item you're wearing right?")
+                    break
+                elif choose == "n" or choose == "N":
+                    break
+                else:
+                    print("It's a yes or no question... enter Y or N")
