@@ -1,9 +1,14 @@
 #  This file contains all functions and statistics related to the character class (main player capabilities)
 #  These functions include : exp_gain, level_up, equip, strip, acquire, discard, restore, consume, use_spell, use_attack
 #                            throw, open_inventory, open_stats, open_clothes
-# PROBLEMS (MANY) WITH LEVEL_UP!!
-import items
+# Inventory cant use items, can throw and discard them
+import items, battle
+b = battle
+
 from random import randint
+
+states = {1: "Battle", 2: "Inn", 3: "Town"}
+state = ""
 
 
 class Character:
@@ -37,25 +42,28 @@ class Character:
         self.experience += int(exp)
         for x in range(4, 100):
             if x**2 < self.experience < (x+1)**2 and x != self.level:
-                self.level = int(x - 4)
+                self.level = int(x - 3)
                 print("Congratulations! You are now level", str(self.level) + "!")
                 self.level_up()
                 return
 
     def level_up(self):  # Somewhat randomly increases all of a player's stats
-        def stat_up(stat, scale, bot, top):
+        def stat_up(name, stat, scale, bot, top):
             boost = scale*randint(bot, top)
             stat += boost
-            print("Your", x, "went up by", boost)
+            print("     Your", name, "went up by", boost)
 
         for x in self.stats:
             if self.element == "light" and x == "heal":  # certain stats go up by less
-                stat_up(self.stats[x], 1, 1, 3)
-            if self.element == "dark" and x == "drain":  # certain stats go up by less
-                stat_up(self.stats[x], 1, 1, 3)
-            stat_up(self.stats[x], 1, 1, 5)
-        stat_up(self.health[1], 10, 2, 3)  # max health goes up by 20 or 30
-        stat_up(self.mana[1], 5, 3, 5)  # max mana goes up by multiples of 5 from 15 to 25
+                stat_up(x, self.stats[x], 1, 1, 3)
+            elif self.element == "dark" and x == "drain":  # certain stats go up by less
+                stat_up(x, self.stats[x], 1, 1, 3)
+            elif x == "drain" or x == "heal":
+                continue
+            else:
+                stat_up(x, self.stats[x], 1, 1, 5)
+        stat_up("health", self.health[1], 10, 2, 3)  # max health goes up by 20 or 30
+        stat_up("mana", self.mana[1], 5, 3, 5)  # max mana goes up by multiples of 5 from 15 to 25
 
     def learn_spell(self, spell):
         if spell not in self.spells:
@@ -101,9 +109,10 @@ class Character:
             return
         print("Your inventory is full so you could not pick up the", item.name)
 
-    def discard(self, item):  # Remove one instance of an item from a players inventory
+    def discard(self, item, speak):  # Remove one instance of an item from a players inventory
         self.inventory.remove(item)
-        print("You have discarded the", item.name)
+        if speak:
+            print("You have discarded the", item.name)
 
 # Battle  and / or stat things
     def restore(self, lestat, amount, prints):  # Restore some health or mana without going over the max
@@ -187,30 +196,63 @@ class Character:
     def throw(self, item, enemy):  # Throws an item at the opponent
         if item.chu:  # if the item is chuckable
             if int(item.dth*0.5*self.stats["strength"]) > enemy.stats["defense"]:
-                enemy.health -= int(item.dth*0.5*self.stats["strength"]) - enemy.stats["defense"]
-                print("You threw the", item.name, "! \n It did", item.dth, "damage.")
-                self.discard(item)
+                damage = int(item.dth*0.5*self.stats["strength"]) - enemy.stats["defense"]
+                enemy.health[0] -= damage
+                print("You threw the", item.name, "! \n It did", damage, "damage.")
+                self.discard(item, False)
                 return
             else:
                 print("You threw the", item.name, "! \n It did no damage. Pathetic.")
-                self.discard(item)
+                self.discard(item, False)
                 return
         print("You can't throw this dummy!")
 
 # Viewing information
     def open_inventory(self):  # NEEDS TO show gold
-        print("\nInventory")
-        print("   Gold :", self.gold)
-        if len(self.inventory) < 1:
-            return
-        printed = []
-        i = 0
-        for x in self.inventory:
-            if x not in printed:
-                i += 1
-                print("      ", i, ".", x.name, "[", self.inventory.count(x), "]")
-                printed.append(x)
-        # print("NEED TO HAVE OPTION TO USE AND LEARN MORE ABOUT ITEMS")
+        chuck = False
+        while not chuck:
+            print("\nInventory")
+            print("   Gold :", self.gold)
+            if len(self.inventory) < 1:
+                return
+            printed = []
+            i = 0
+            for x in self.inventory:
+                if x not in printed:
+                    i += 1
+                    print("      ", i, ".", x.name, "[", self.inventory.count(x), "]")
+                    printed.append(x)
+
+            try:  # Interacting with items
+                choose = int(input("Choose an item (letter to exit) : "))
+                if choose not in range(1, len(printed)-1):
+                    print("You have to enter the value of a item shown above.")
+                item = printed[choose-1]
+                print(item.name, ":", item.des, "\n     Item element :", item.element)
+                while True:
+                    print("What will you do with the item?: \n    1.Nothing\n    2.Discard\n    3.Throw")
+                    choice = int(input())
+                    if choice in range(1, 4):
+                        if choice == 1:
+                            print("Returning to inventory.")
+                        elif choice == 2:
+                            self.discard(item, True)
+                            return
+                        elif choice == 3:
+                            if state == "Battle":
+                                self.throw(item, b.baddie)
+                                chuck = True
+                            else:
+                                print("You can't do that here.")
+                        break
+                    else:
+                        print("You have to pick an actual option dummy")
+            except (TypeError, ValueError) as e:
+                print("You closed your bag.")
+                return
+        if chuck:
+            return "yeet"
+            # NEED TO HAVE OPTION TO USE ITEMS
 
     def open_stats(self):  # Tells the player their stats
         print("\n")
