@@ -1,4 +1,9 @@
-import player, items, battle, monsters, spells
+import player
+import battle
+import items
+import monsters
+import spells
+
 p = player
 b = battle
 m = monsters
@@ -20,7 +25,7 @@ P1.equip(items.R1)
 
 P1.learn_spell(s.DARK_A1)
 b.battle(P1, m.SLIME)
-#   you have to fix gaining items before going past this point.... it throws an AttributeError
-P1.open_stats()
-P1.sleep()
-P1.open_stats()
+
+# P1.open_stats()
+# P1.sleep()
+# P1.open_stats()

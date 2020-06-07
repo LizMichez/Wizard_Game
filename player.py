@@ -2,13 +2,19 @@
 #  These functions include : exp_gain, level_up, equip, strip, acquire, discard, restore, consume, use_spell, use_attack
 #                            throw, open_inventory, open_stats, open_clothes
 # Inventory cant use items, can throw and discard them
-import items, battle
-b = battle
-
+# Need to make type advantages a thing
 from random import randint
+
+import battle
+import items
+
+b = battle
+i = items
 
 states = {1: "Battle", 2: "Inn", 3: "Town"}
 state = ""
+
+elementsW = ["dark", "light", "dark", "fire", "water", "earth", "air", "fire"]  # An elements weakness to their right
 
 
 class Character:
@@ -28,8 +34,8 @@ class Character:
     elementWords = []
     spells = []
 
-    clothes = {"hat": items.NO, "glasses": items.NO, "necklace": items.NO, "coat": items.NO, "shirt": items.NO,
-               "bracelet": items.NO, "ring": items.NO, "wand": items.NO, "pants": items.NO, "shoes": items.NO}
+    clothes = {"hat": i.NO, "glasses": i.NO, "necklace": i.NO, "coat": i.NO, "shirt": i.NO, "bracelet": i.NO,
+               "ring": i.NO, "wand": i.NO, "pants": i.NO, "shoes": i.NO}
 
     inventory = []
     inventoryCap = 25
@@ -40,30 +46,38 @@ class Character:
 
     def exp_gain(self, exp):
         self.experience += int(exp)
-        for x in range(4, 100):
-            if x**2 < self.experience < (x+1)**2 and x != self.level:
-                self.level = int(x - 3)
-                print("Congratulations! You are now level", str(self.level) + "!")
+        print("You gained", exp, "experience!")
+        for x in range(5, 100):
+            if x**2 < self.experience < (x+1)**2 and x - 4 != self.level:
+                self.level = int(x - 4)
+                print("\nCongratulations! You are now level", str(self.level) + "!")
                 self.level_up()
                 return
 
     def level_up(self):  # Somewhat randomly increases all of a player's stats
-        def stat_up(name, stat, scale, bot, top):
-            boost = scale*randint(bot, top)
-            stat += boost
-            print("     Your", name, "went up by", boost)
-
         for x in self.stats:
             if self.element == "light" and x == "heal":  # certain stats go up by less
-                stat_up(x, self.stats[x], 1, 1, 3)
+                boost = 1 * randint(1, 3)
+                self.stats[x] += boost
+                print("     Your", x, "went up by", boost)
             elif self.element == "dark" and x == "drain":  # certain stats go up by less
-                stat_up(x, self.stats[x], 1, 1, 3)
+                boost = 1*randint(1, 3)
+                self.stats[x] += boost
+                print("     Your", x, "went up by", boost)
             elif x == "drain" or x == "heal":
                 continue
             else:
-                stat_up(x, self.stats[x], 1, 1, 5)
-        stat_up("health", self.health[1], 10, 2, 3)  # max health goes up by 20 or 30
-        stat_up("mana", self.mana[1], 5, 3, 5)  # max mana goes up by multiples of 5 from 15 to 25
+                boost = 1 * randint(1, 4)
+                self.stats[x] += boost
+                print("     Your", x, "went up by", boost)
+
+        boost = 10 * randint(1, 3)
+        self.health[1] += boost
+        print("     Your max health went up by", boost)
+
+        boost = 5 * randint(2, 5)
+        self.mana[1] += boost
+        print("     Your max mana went up by", boost)
 
     def learn_spell(self, spell):
         if spell not in self.spells:
@@ -82,9 +96,9 @@ class Character:
                 if self.clothes[x] == items.NO:
                     self.clothes[x] = item
                     print("\nYou have equip the", item.name)
-                    for i in item.stat:
-                        self.stats[i] += item.stat[i]
-                        print("You gained a", i, "boost of", item.stat[i])
+                    for ii in item.stat:
+                        self.stats[ii] += item.stat[ii]
+                        print("You gained a", ii, "boost of", item.stat[ii])
                     if item in self.inventory:
                         self.inventory.remove(item)
                     return
@@ -116,30 +130,30 @@ class Character:
             print("You have discarded the", item.name)
 
 # Battle  and / or stat things
-    def restore(self, lestat, amount, prints):  # Restore some health or mana without going over the max
+    def restore(self, lestat, name, amount, prints):  # Restore some health or mana without going over the max
         lestat[0] += amount
         if lestat[0] > lestat[1]:
             lestat[0] = lestat[1]
             if prints:
-                print("You now have full", lestat)
+                print("You now have full", name)
         else:
             if prints:
-                print("You restored", amount, lestat)
+                print("You restored", amount, name)
 
     def consume(self, item):  # NOT DONE
         if item.use:
             for x in item.use:
                 if x == "health":
-                    self.restore(self.health, item.use[x], True)
+                    self.restore(self.health, "health", item.use[x], True)
                 elif x == "mana":
-                    self.restore(self.mana, item.use[x], True)
+                    self.restore(self.mana, "mana", item.use[x], True)
                 else:
                     self.stats[x] += item.use[x]
         else:
             print("There's nothing to do with this item, you look at it sadly")
 
     def use_spell(self, spell, enemy):  # NOT DONE
-        print("You cast", spell.name, "!")
+        print("You cast", str(spell.name)+"!")
         if self.mana[0] < spell.mana:
             print("You do not have enough mana to complete this spell, you just wave your wand and look like an idiot")
             return
@@ -147,18 +161,23 @@ class Character:
         if spell.base_dam > 0:  # Attack section
             hit = randint(0, 101)
             if hit < 35 - int(self.stats["accuracy"]*0.5):
-                print("You missed the", enemy.name, "!")
+                print("You missed the", str(enemy.name)+"!")
+            elif b.baddie.element != "none" and spell.element == elementsW[elementsW.index(b.baddie.element)+1]:  # Super effective
+                damage = spell.base_dam + int(self.stats["magic"]*1.5)
+                enemy.health[0] -= damage
+                print("You did", damage, "damage")
+                self.restore(self.health, "health", int(damage * 0.01 * (self.stats["drain"] + spell.drain)), False)
             elif hit > 90 - int(self.stats["luck"]*0.5):
                 damage = spell.base_dam + self.stats["magic"]
                 enemy.health[0] -= damage
                 print("You did", damage, "damage")
-                self.restore(self.health, int(damage * 0.01 * (self.stats["drain"]+spell.drain)), False)
+                self.restore(self.health, "health", int(damage * 0.01 * (self.stats["drain"]+spell.drain)), False)
             else:
                 damage = spell.base_dam + self.stats["magic"] - enemy.defBoost
                 if damage > 0:
                     enemy.health[0] -= damage
                     print("You did", damage, "damage")
-                    self.restore(self.health, int(damage*0.01*(self.stats["drain"]+spell.drain)), False)
+                    self.restore(self.health, "health", int(damage*0.01*(self.stats["drain"]+spell.drain)), False)
                 else:
                     print("The enemy defended against the attack, it did no damage")
 
@@ -209,21 +228,21 @@ class Character:
         print("You can't throw this dummy!")
 
     def sleep(self):
-        dream = int((self.health[0]/self.health[0])*10)
+        dream = int((self.health[0]/self.health[1])*10)
         if dream >= 9:
-            print("You went to sleep and had a great dream.... which of course you cant remember.")
+            print("\nYou went to sleep and had a great dream.... which of course you cant remember.")
         elif dream >= 5:
-            print("You went to sleep.")
+            print("\nYou went to sleep.")
         elif dream >= 2:
-            print("You collapsed into bed and slept like a rock... if rocks could sleep.")
+            print("\nYou collapsed into bed and slept like a rock... if rocks could sleep.")
         else:
-            print("You just made it to bed and collapsed into a sleep plagued with nightmares.")
+            print("\nYou just made it to bed and collapsed into a sleep plagued with nightmares.")
 
-        self.restore(self.health, self.health[1], True)
-        self.restore(self.mana, self.mana[1], True)
+        self.restore(self.health, "health", self.health[1], True)
+        self.restore(self.mana, "mana", self.mana[1], True)
 
 # Viewing information
-    def open_inventory(self):  # NEEDS TO show gold
+    def open_inventory(self):
         chuck = False
         while not chuck:
             print("\nInventory")
@@ -231,11 +250,11 @@ class Character:
             if len(self.inventory) < 1:
                 return
             printed = []
-            i = 0
+            ii = 0
             for x in self.inventory:
                 if x not in printed:
-                    i += 1
-                    print("      ", i, ".", x.name, "[", self.inventory.count(x), "]")
+                    ii += 1
+                    print("      ", ii, ".", x.name, "[", self.inventory.count(x), "]")
                     printed.append(x)
 
             try:  # Interacting with items
@@ -262,7 +281,7 @@ class Character:
                         break
                     else:
                         print("You have to pick an actual option dummy")
-            except (TypeError, ValueError) as e:
+            except (TypeError, ValueError):
                 print("You closed your bag.")
                 return
         if chuck:
@@ -281,7 +300,7 @@ class Character:
         clotheson = []
         print("\nClothes")
         for x in self.clothes:
-            if self.clothes[x] == items.NO:
+            if self.clothes[x] == i.NO:
                 print("    ", x, ":")
             else:
                 print("    ", x, ":", self.clothes[x].name)
@@ -303,7 +322,7 @@ class Character:
                                 break
                             elif choosess == "n" or choosess == "N":
                                 break
-                        except (TypeError, ValueError, IndexError) as e:
+                        except (TypeError, ValueError, IndexError):
                             print("You know you have to enter a number of an item you're wearing right?")
                     break
                 elif choose == "n" or choose == "N":

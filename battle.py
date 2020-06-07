@@ -1,12 +1,13 @@
-import spells, player
 from random import randint
-baddie = ""  # for external reference to enemy
 
-# gaining items is fucked
+import player
+import spells
+
+baddie = ""  # for external reference to enemy
 
 
 def battle(you, enemy):
-    print("\nYou have encountered a", enemy.name, "!")
+    print("\nYou have encountered a", str(enemy.name) + "!")
     player.state = player.states[1]
     global baddie
     baddie = enemy
@@ -31,16 +32,15 @@ def battle(you, enemy):
 
     elif enemy.health[0] <= 0 < you.health[0]:  # The enemy dies and you're alive
         print("You defeated the", enemy.name, "!")
-        print("You gained", enemy.gold, "gold !")
+        print("You gained", enemy.gold, "gold!")
         you.gold += enemy.gold
+        gained = enemy.drop()
+        if not gained == "nothing":
+            you.acquire(gained)
         if turn >= 10:
             you.exp_gain(enemy.exp)
         else:
-            you.exp_gain(enemy.exp + 11 - turn)
-        gained = enemy.drop
-        if not gained == "nothing":
-            print("You gained", gained.name, "!")
-            you.acquire(gained)
+            you.exp_gain(enemy.exp + 10 - turn)
 
     elif enemy.health[0] < 0 > you.health[0]:  # If both of you manage to die
         print("In an incredible display of failure both you and the", enemy.name, "were defeated. \n Thankfully some "
@@ -84,7 +84,7 @@ def player_turn(you, enemy):
                         print("....The number has to be an actual spell, try again")
                     else:
                         break
-                except (TypeError, ValueError) as e:
+                except (TypeError, ValueError):
                     print("Enter the NUMBER corresponding to the spell you want to use")
             you.use_spell(you.spells[spell-1], enemy)
             return "spell"
