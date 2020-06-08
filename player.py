@@ -11,6 +11,8 @@ import items
 b = battle
 i = items
 
+day = 0
+
 states = {1: "Battle", 2: "Inn", 3: "Town"}
 state = ""
 
@@ -240,6 +242,9 @@ class Character:
 
         self.restore(self.health, "health", self.health[1], True)
         self.restore(self.mana, "mana", self.mana[1], True)
+
+        global day
+        day += 1
 
 # Viewing information
     def open_inventory(self):
