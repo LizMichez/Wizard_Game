@@ -15,6 +15,9 @@ P1 = player.Character(10, 10, 10, 10, 10, 10, 10, 10, 10, 100, 100)
 P1.name = "Bean"
 P1.element = "dark"
 
+P1.gold += 10000
+P1.health[0] -= 50
+
 tow.town(P1)
 
 # p.state = p.states[2]

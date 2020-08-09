@@ -28,7 +28,7 @@ def town(person):
             print("Enter the number corresponding to your choice")
 
     print("Tired after a long day you head to the Inn")
-    inn()
+    inn(person)
 
 
 def wander(person):  # Walk around and hear gossip, may run into someone on certain days
@@ -41,11 +41,14 @@ def wander(person):  # Walk around and hear gossip, may run into someone on cert
     hours += 1
 
 
-def shop(person):  # IN DEVELOPMENT
+def shop(person):  # IN DEVELOPMENT - CHECK ERROR CATCHING
     shops = ["Rissas' Delights", "Caspian's Couture", "Bubbles and Bobs"]  # Food, Clothes, Random Magicish Stuff
-    inven1 = []
-    inven2 = [it.HAT1, it.HAT2, it.FHAT1, it.FHAT2, it.WHAT1, it.WHAT2, it.EHAT1, it.EHAT2, it.VHAT1, it.VHAT2,
-              it.DHAT1, it.DHAT2, it.LHAT1, it.LHAT2]
+    inven1 = [it.B_MUFF, it.C_MUFF, it.F_MUFF, it.T_SOUP, it.R_SOUP, it.F_STEAK, it.P_STEAK, it.W_DRINK]
+    inven2 = [it.HAT1, it.HAT2, it.F_HAT1, it.F_HAT2, it.W_HAT1, it.W_HAT2, it.E_HAT1, it.E_HAT2, it.V_HAT1, it.V_HAT2,
+              it.D_HAT1, it.D_HAT2, it.L_HAT1, it.L_HAT2, it.GLASS1, it.GLASS2, it.SHIRT1, it.SHIRT2, it.SHIRT3,
+              it.COAT1, it.COAT2, it.F_COAT1, it.F_COAT2, it.W_COAT1, it.W_COAT2, it.E_COAT1, it.E_COAT2, it.V_COAT1,
+              it.V_COAT2, it.D_COAT1, it.D_COAT2, it.L_COAT1, it.L_COAT2, it.SHOES1, it.SHOES2, it.F_SHOES1,
+              it.W_SHOES1, it.E_SHOES1, it.V_SHOES1, it.D_SHOES1, it.L_SHOES1]
     inven3 = []
     inventories = [inven1, inven2, inven3]
     if hours < 19:
@@ -60,9 +63,8 @@ def shop(person):  # IN DEVELOPMENT
                 print("You return to the town square")
                 return
             else:
-                try:
+                try:  # actual shopping part
                     you_enter = shops[int(enter)-1]
-                    # actual shopping part
                     t.shopTalk(you_enter, 0)
                     while True:
                         t.shopTalk(you_enter, 1)
@@ -70,12 +72,29 @@ def shop(person):  # IN DEVELOPMENT
                         buyable = []
                         for x in inventories[int(enter) - 1]:
                             if x.element == person.element or x.element == "none":
-                                print("     ", str(i)+".", x.name, "-", x.worth, "gold -", str(x.stat)[1:-1],
-                                      "\n                   <", x.des)
+                                print("     ", str(i)+".", x.name, "-", x.worth, "gold :", str(x.stat)[1:-1],
+                                      "\n                   -", x.des)
                                 buyable.append(x)
                                 i += 1
-
-                        purchase = input("What do you want to buy? ")
+                        purchase = input("What do you want to buy? [enter N to leave]")
+                        try:
+                            if purchase == "n" or purchase == "N":
+                                t.shopTalk(you_enter, 3)
+                                print("You return to the town square")
+                                return
+                            else:
+                                t.shopTalk(you_enter, 2)
+                                if person.gold > buyable[int(purchase)-1].worth and len(person.inventory) < person.inventoryCap:
+                                    person.gold -= buyable[int(purchase)-1].worth
+                                    person.acquire(buyable[int(purchase)-1])
+                                    if int(enter) == 1:
+                                        person.consume(buyable[int(purchase)-1])
+                                elif person.gold < buyable[int(purchase)-1].worth:
+                                    print("You can't afford this item")
+                                elif len(person.inventory) >= person.inventoryCap:
+                                    print("Your inventory is too full for this item, deal with that then try again")
+                        except(TypeError, ValueError, IndexError):
+                            print("That's not an item or an exit, lets try this again")
 
                 except (TypeError, ValueError, IndexError):
                     print("That's not an option, remember to enter the number beside your choice")
