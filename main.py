@@ -8,17 +8,18 @@ p = player
 b = battle
 m = monsters
 s = spells
-t = town
+tow = town
 
 # runs story and literally everything, currently being used for testing
-t.town()
+P1 = player.Character(10, 10, 10, 10, 10, 10, 10, 10, 10, 100, 100)
+P1.name = "Bean"
+P1.element = "dark"
+
+tow.town(P1)
 
 # p.state = p.states[2]
 #
-# P1 = player.Character(10, 10, 10, 10, 10, 10, 10, 10, 10, 100, 100)
-# P1.name = "Bean"
-# P1.element = "dark"
-#
+
 # P1.acquire(items.DA1)
 # P1.acquire(items.ROCK2)
 # P1.acquire(items.ROCK3)
