@@ -41,3 +41,19 @@ def shopTalk(store, stage):
 
     print(stages[stage][storeOT])
 
+
+def readLibrary(book, page):
+    history_of_magic = ["page 1", "second page", "3", "IV", "Cinque"]
+    monster_dictionary = []
+    dueling_the_basics = []
+    intro_to_herbology = []
+    town_history = []
+
+    books = [history_of_magic, monster_dictionary, dueling_the_basics, intro_to_herbology, town_history]
+    if int(page) > len(books[book])-1:
+        print(books[book][page])
+        print("You have finished the book and return it to its shelf.")
+        return "done"
+    else:
+        print(books[book][page])
+
