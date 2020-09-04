@@ -36,7 +36,8 @@ def battle(you, enemy):
         you.gold += enemy.gold
         gained = enemy.drop()
         if not gained == "nothing":
-            you.acquire(gained)
+            for x in gained:
+                you.acquire(x)
         if turn >= 10:
             you.exp_gain(enemy.exp)
         else:
@@ -49,7 +50,7 @@ def battle(you, enemy):
 
     enemy.health[0] = enemy.health[1]
     enemy.mana[0] = enemy.mana[1]
-    player.state = player.states[3]
+    player.state = player.states[4]
 
 
 def player_turn(you, enemy):
@@ -117,3 +118,26 @@ def enemy_turn(you, enemy):  # The enemy has three chances to pick an attack tha
             break
         if i == 3:  # Enemy tries to use an attack that requires too much mana three times
             print("The enemy got distracted")
+
+
+def encounter(you, animal):  # For killing animals
+    print("\nYou have encountered a", str(animal.name) + "!")
+    player.state = player.states[1]
+
+    print("\nYour Stats: health [", you.health[0], "/", you.health[1], "], mana [", you.mana[0],
+          "/", you.mana[1], "]\nAnimal Health:", animal.health[0])
+
+    your_move = player_turn(you, animal)
+
+    if animal.health[0] <= 0:  # The enemy dies and you're alive
+        print("You defeated the", animal.name, "!")
+        gained = animal.drop()
+        for x in gained:
+            you.acquire(x)
+    elif your_move == "ran":
+        pass
+    else:
+        print("The animal escaped.")
+
+    animal.health[0] = animal.health[1]
+    player.state = player.states[4]

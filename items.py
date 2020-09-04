@@ -199,8 +199,8 @@ JELLY_G = Items("Gold Jelly", "misc", "none", 0, 50, True, 0, {}, {},
 
 B_CLAW = Items("Bat Claw", "misc", "dark", 0, 20, True, 2, {}, {}, "The claw of a corrupt bat, it oozes darkness")
 B_WING = Items("Bat Wing", "misc", "dark", 0, 25, True, 0, {}, {}, "The wing of a corrupt bat, it oozes darkness")
-R_CLAW = Items("Bat Claw", "misc", "none", 0, 25, True, 4, {}, {}, "The claw of a swamp rat")
-R_TAIL = Items("Bat Wing", "misc", "none", 0, 30, True, 2, {}, {}, "The wing of a swamp rat")
+R_CLAW = Items("Rat Claw", "misc", "none", 0, 25, True, 4, {}, {}, "The claw of a swamp rat")
+R_TAIL = Items("Rat Wing", "misc", "none", 0, 30, True, 2, {}, {}, "The wing of a swamp rat")
 D_WING = Items("Dragon Wing", "misc", "none", 0, 50, True, 10, {}, {}, "The wing material of a dragon")
 D_CLAW = Items("Dragon Claw", "misc", "none", 0, 75, True, 15, {}, {}, "The claw of a dragon, about the size of a rat")
 D_TAIL = Items("Dragon Tail", "misc", "none", 0, 100, True, 25, {}, {}, "The tail of a dragon aka chunk of magic meat")
@@ -213,6 +213,34 @@ E_GEM = Items("Earth Gem", "misc", "earth", 3, 45, True, 10, {}, {}, "A brown-gr
 A_GEM = Items("Air Gem", "misc", "air", 3, 45, True, 10, {}, {}, "A white gem infused with air magic")
 L_GEM = Items("Light Gem", "misc", "light", 3, 45, True, 10, {}, {}, "A glowing gem infused with light magic")
 
+D_MEAT = Items("Deer Meat", "meat", "none", 0, 10, True, 7, {}, {"health": 5}, "A raw chunk of deer meat")
+D_PELT = Items("Deer Pelt", "skin", "none", 0, 15, True, 4, {}, {}, "The pelt of a full grown deer")
+R_MEAT = Items("Rabbit Meat", "meat", "none", 0, 10, True, 4, {}, {"health": 5}, "A raw lump of rabbit meat")
+R_PELT = Items("Rabbit Pelt", "skin", "none", 0, 10, True, 2, {}, {}, "The soft pelt of a full grown rabbit")
+F_MEAT = Items("Fish Meat", "meat", "none", 0, 15, True, 4, {}, {"health": 5}, "A raw, watermelon sized fish")
+F_SCALES = Items("Fish Scales", "skin", "none", 0, 20, True, 4, {}, {}, "The scales off a good sized fish")
+G_MEAT = Items("Goat Meat", "meat", "none", 0, 25, True, 7, {}, {"health": 5}, "A raw chunk of goat meat")
+G_PELT = Items("Goat Pelt", "skin", "none", 0, 25, True, 4, {}, {}, "The pelt of a full grown goat")
+B_MEAT = Items("Bear Meat", "meat", "none", 0, 35, True, 10, {}, {"health": 5}, "A raw slab of bear meat")
+B_PELT = Items("Bear Pelt", "skin", "none", 0, 50, True, 6, {}, {}, "The pelt of a full grown bear")
+
+HERB_1 = Items("Mint", "herb", "none", 0, 5, True, 1, {}, {"health": 1}, "A handful of mint wrapped in twine")
+HERB_2 = Items("Thyme", "herb", "none", 0, 10, True, 1, {}, {"health": 1}, "A handful of thyme wrapped in twine")
+HERB_3 = Items("Rosemary", "herb", "none", 0, 15, True, 1, {}, {"health": 2}, "A handful of rosemary wrapped in twine")
+HERB_4 = Items("Dill", "herb", "none", 0, 20, True, 1, {}, {"health": 2}, "A handful of dill wrapped in twine")
+HERB_5 = Items("Lemon Grass", "herb", "none", 0, 25, True, 1, {}, {"health": 3}, "A bundle of lemon grass")
+
+FLOWER_1 = Items("Daises", "flower", "none", 0, 5,  True, 1, {}, {}, "A bouquet of daisies")
+FLOWER_2 = Items("Sunflowers", "flower", "none", 0, 7,  True, 1, {}, {}, "A bouquet of sunflowers")
+FLOWER_3 = Items("Lilies", "flower", "none", 0, 10,  True, 1, {}, {}, "A bouquet of lilies")
+FLOWER_4 = Items("Orchids", "flower", "none", 0, 15,  True, 1, {}, {}, "A bouquet of orchids")
+FLOWER_5 = Items("Roses", "flower", "none", 0, 20,  True, 3, {}, {}, "A bouquet of roses")
 
 # Filler Item
 NO = Items("NO", "NO", "NO", 0, 0, False, 0, {}, {}, "NO")
+
+#  Location / Biomes
+Forest_P = [HERB_1, HERB_2, FLOWER_1, FLOWER_2, FLOWER_3]
+Swamp_P = [HERB_2, HERB_3, HERB_4, FLOWER_3, FLOWER_4]
+Mountain_P = [HERB_5]
+Cave_P = [FLOWER_5]

@@ -31,13 +31,18 @@ def town(person):
     inn(person)
 
 
-def wander(person):  # Walk around and hear gossip, may run into someone on certain days
+def wander(person):  # Walk around and hear gossip, may run into someone on certain days  - - - IN PROGRESS
     print("You wander around the central square of the town and listen to the world around you...")
     global hours
     if hours < 20:
         t.tgossip()
     else:
-        print("   The square appears to be deserted, you listen to the sounds of the fountain and bats flying overhead")
+        if person.element == "dark" and 5 == 3:  # TEMPORARY CONDITION, WILL BE HAS ENCOUNTERED TRAINER
+            print("Encounter person")
+        elif person.element == "dark":
+            print("Train with person")
+        else:
+            print("    The square appears to be deserted, you listen to the fountain and bats flying overhead")
     hours += 1
 
 
@@ -103,7 +108,7 @@ def shop(person):
 
 
 def craftsmen(person):
-    print("can go to the brewer, wizard, armourer")
+    print("can go to the brewer, wizard, armourer, butcher")
 
 
 def school(person):
@@ -149,6 +154,8 @@ def inn(person):
 
 def adventure(person):
     print("Battle monsters or explore the area (and then get attacked by monsters)")
+    #  Select the place you want to go, explore place, encounter item or animal or monster, can explore up to hour = 20
+    #  Fields - Lv 0, Swamp - Lv 4, Mountain - Lv 8, Cave - Lv 12
 
 
 options = {"Wander": wander, "Adventure": adventure, "Shop": shop, "Visit a Craftsman": craftsmen,

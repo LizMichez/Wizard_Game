@@ -13,7 +13,7 @@ i = items
 
 day = 0
 
-states = {1: "Battle", 2: "Inn", 3: "Town"}
+states = {1: "Battle", 2: "Inn", 3: "Town", 4: "Adventure"}
 state = ""
 
 elementsW = ["dark", "light", "dark", "fire", "water", "earth", "air", "fire"]  # An elements weakness to their right
@@ -31,6 +31,8 @@ class Character:
     gender = ""
     race = ""
     name = ""
+
+    progress = {"Intro": False, "Town": False, "School": False}
 
     element = ""
     elementWords = []
