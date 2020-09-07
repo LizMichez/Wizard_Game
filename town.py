@@ -1,15 +1,22 @@
 # should include shops, school, gossip, training, crafting, quests?
+from random import randint
 import player
 import text
 import items
+import monsters
+import battle
+
 p = player
 t = text
 it = items
+m = monsters
+b = battle
 
 hours = 8
 
 
 def town(person):
+    global hours
     while hours < 22:
         print("Welcome to town! While here you can..")
         leoptions = []
@@ -32,8 +39,8 @@ def town(person):
 
 
 def wander(person):  # Walk around and hear gossip, may run into someone on certain days  - - - IN PROGRESS
-    print("You wander around the central square of the town and listen to the world around you...")
     global hours
+    print("You wander around the central square of the town and listen to the world around you...")
     if hours < 20:
         t.tgossip()
     else:
@@ -47,6 +54,7 @@ def wander(person):  # Walk around and hear gossip, may run into someone on cert
 
 
 def shop(person):
+    global hours
     shops = ["Rissas' Delights", "Caspian's Couture", "Bubbles and Bobs"]  # Food, Clothes, Random Magicish Stuff
     inven1 = [it.B_MUFF, it.C_MUFF, it.F_MUFF, it.T_SOUP, it.R_SOUP, it.F_STEAK, it.P_STEAK, it.W_DRINK]
     inven2 = [it.HAT1, it.HAT2, it.F_HAT1, it.F_HAT2, it.W_HAT1, it.W_HAT2, it.E_HAT1, it.E_HAT2, it.V_HAT1, it.V_HAT2,
@@ -68,6 +76,7 @@ def shop(person):
                 print("You return to the town square")
                 return
             else:
+                hours += 1
                 try:  # actual shopping part
                     you_enter = shops[int(enter)-1]
                     t.shopTalk(you_enter, 0)
@@ -108,22 +117,23 @@ def shop(person):
 
 
 def craftsmen(person):
+    global hours
     print("can go to the brewer, wizard, armourer, butcher")
 
 
 def school(person):
+    global hours
     print("Learn new spells for gold")
 
 
-def library(person):  # In Development
+def library(person):  # Books still in development, library is fine
+    global hours
     print("You walk into the old library with beautiful wood carvings and shelves of books")
     while True:
         books = ["History of Magic", "Monster Guide", "Dueling - The Basics", "Introduction to Plants", "Town History"]
         print("On the shelves you see:")
-        i = 1
         for x in books:
-            print("       " + str(i) + ".", x)
-            i += 1
+            print("       " + str(books.index(x) + 1) + ".", x)
         choice = input("What do you want to read? [enter N to leave]")
         try:
             if choice == "n" or choice == "N":
@@ -149,13 +159,70 @@ def library(person):  # In Development
 
 
 def inn(person):
+    global hours
     print("You can gossip, eat, sleep, and gamble here")
 
 
-def adventure(person):
-    print("Battle monsters or explore the area (and then get attacked by monsters)")
-    #  Select the place you want to go, explore place, encounter item or animal or monster, can explore up to hour = 20
-    #  Fields - Lv 0, Swamp - Lv 4, Mountain - Lv 8, Cave - Lv 12
+def adventure(person):  # WEIRDLY BROKEN / ROYALLY FUCKED
+    global hours
+    places = ["Grassy Fields", "Murky Swamp", "Forlorn Mountains", "Abandoned Caves"]
+    odds = [[1, 2, 3], [3, 2, 1], [2, 3, 1], [3, 2, 1]]  # battle, encounter, find
+
+    print("You walk up to the village gate, there are four teleport pedestals.")
+    while True:
+        print("Do you go to the:")
+        for x in places:
+            print("       " + str(places.index(x) + 1) + ".", x)
+        choice = input("Where do you want to go? [enter N to leave]")
+        if choice == "n" or choice == "N":
+            print("You walk back to the town square.")
+            return
+
+        try:
+            place = int(choice)-1
+            if person.level < place*4:
+                print("You are stopped by the guards at the gate who inform you your level is too low for this area.")
+            else:
+                print("You are warped to the", places[place] + ".")
+                break
+        except(ValueError, TypeError, IndexError):
+            print("That's not an option or the exit, lets try this again")
+
+    while True:
+        print("You can explore until the 20th, hour. It is currently the", str(hours) + "th hour.")
+        cont = input("Enter Y to explore or N to return to town : ")
+        if cont == "N" or cont == "n":
+            print("You return to town.")
+            return
+        elif cont == "Y" or cont == "y":
+            num = randint(0, 10)  # Used to choose what you do based on areas encounter odds
+            if num == 1:
+                event = odds[place].index(1)
+            elif num <= 4:
+                event = odds[place].index(2)
+            else:
+                event = odds[place].index(3)
+
+            if event == 0:  # Battle
+                hours += 1
+                state = b.battle(person, m.Monster_Loc[place][randint(0, len(m.Monster_Loc[place])-1)])
+                if state == "win" or state == "ran":
+                    pass
+                else:
+                    hours += 1
+                    return
+            elif event == 1:  # Encounter Animal
+                hours += 0.5
+                b.encounter(person, m.Animal_Loc[place][randint(0, len(m.Animal_Loc[place])-1)])
+            elif event == 2:  # Find Plant
+                hours += 0.5
+                plant = it.Location_P[place][randint(0, len(it.Location_P[place])-1)]
+                person.acquire(plant)
+        else:
+            print("That's not an option, lets try this again")
+
+        if hours >= 20:
+            print("It is now the", hours, "hour, you are warped back to town.")
 
 
 options = {"Wander": wander, "Adventure": adventure, "Shop": shop, "Visit a Craftsman": craftsmen,

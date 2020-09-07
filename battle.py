@@ -20,15 +20,17 @@ def battle(you, enemy):
         your_move = player_turn(you, enemy)
         if your_move == "ran":
             break
-        if you.health[0] < 0 or enemy.health[0] < 0:
+        elif you.health[0] < 0 or enemy.health[0] < 0:
             break
-        enemy_turn(you, enemy)
+        else:
+            enemy_turn(you, enemy)
 
     if you.health[0] <= 0 < enemy.health[0]:  # You die and the enemy is alive
         print("You were defeated and pass out, thankfully some adventurers came by and dragged you back to town")
         gold_loss = int(you.gold/randint(2, 5))
         you.gold -= gold_loss
         print("You lost", gold_loss, "gold.")
+        response = "loss"
 
     elif enemy.health[0] <= 0 < you.health[0]:  # The enemy dies and you're alive
         print("You defeated the", enemy.name, "!")
@@ -42,15 +44,21 @@ def battle(you, enemy):
             you.exp_gain(enemy.exp)
         else:
             you.exp_gain(enemy.exp + 10 - turn)
+        response = "win"
 
     elif enemy.health[0] < 0 > you.health[0]:  # If both of you manage to die
         print("In an incredible display of failure both you and the", enemy.name, "were defeated. \n Thankfully some "
               "adventurers came by and made sure to loot the", enemy.name)
         print("Oh they also dragged you back to town")
+        response = "tie"
+
+    else:  # You ran away
+        response = "ran"
 
     enemy.health[0] = enemy.health[1]
     enemy.mana[0] = enemy.mana[1]
     player.state = player.states[4]
+    return response
 
 
 def player_turn(you, enemy):
@@ -121,6 +129,8 @@ def enemy_turn(you, enemy):  # The enemy has three chances to pick an attack tha
 
 
 def encounter(you, animal):  # For killing animals
+    global baddie
+    baddie = animal
     print("\nYou have encountered a", str(animal.name) + "!")
     player.state = player.states[1]
 

@@ -7,20 +7,24 @@ it = items
 
 
 class Animals:
-    def __init__(self, name, health, defe, spe, luck, intel, drops, des):
+    def __init__(self, name, health, ele, defe, spe, luck, intel, drops, des):
         self.name = name  # str
-        self. health = [health, health]  # int
-        self.stats = { "defense": defe, "speed": spe, "luck": luck, "intel": intel}
+        self.element = ele  # str
+        self.health = [health, health]  # int
+        self.stats = {"defense": defe, "speed": spe, "luck": luck, "intel": intel}
         self.des = des  # str
         self.drops = drops  # array
 
+    defBoost = 0
+
     def drop(self):
         items_dropped = []
-        option = randint(0, 4)
+        option = randint(0, len(self.drops)-1)
         if option == 3:
             items_dropped = self.drops
         else:
             items_dropped.append(self.drops[option])
+        return items_dropped
 
 
 class Monsters:
@@ -182,13 +186,13 @@ DRAGON = Monsters("Mature Dragon", "fire", 300, 100, 250, 400, [s.FIRE_A1, s.FIR
 #                  mag, stre, defe, spe, acc, luck, intel, heal, drain, drops, des)
 # DRAGON_B = Monsters("Azeroth : Light Bringer", "light")
 
-# Animals (name, health, defe, spe, luck, intel, des
+# Animals
 
-DEER = Animals("Deer", 50, 5, 15, 5, 5, [it.D_MEAT, it.D_PELT], "A fully grown healthy looking deer")
-RABBIT = Animals("Rabbit", 15, 2, 50, 15, 5, [it.R_MEAT, it.R_PELT], "A fully grown fluffy little rabbit")
-FISH = Animals("Fish", 10, 2, 15, 5, 5, [it.F_MEAT, it.F_SCALES], "A melon sized fish")
-GOAT = Animals("Goat", 150, 15, 15, 5, 5, [it.G_MEAT, it.G_PELT], "A fully grown, rather fluffy, mountain goat")
-BEAR = Animals("Bear", 200, 50, 15, 5, 5, [it.B_MEAT, it.B_PELT], "A decent sized, and thankfully docile, brown bear")
+DEER = Animals("Deer", 50, "none", 5, 15, 5, 5, [it.D_MEAT, it.D_PELT], "A fully grown healthy looking deer")
+RABBIT = Animals("Rabbit", 15, "none", 2, 50, 15, 5, [it.R_MEAT, it.R_PELT], "A fully grown fluffy little rabbit")
+FISH = Animals("Fish", 10, "none", 2, 15, 5, 5, [it.F_MEAT, it.F_SCALES], "A melon sized fish")
+GOAT = Animals("Goat", 150, "none", 15, 15, 5, 5, [it.G_MEAT, it.G_PELT], "A fully grown, rather fluffy, mountain goat")
+BEAR = Animals("Bear", 200, "none", 50, 15, 5, 5, [it.B_MEAT, it.B_PELT], "A decent sized, docile, black bear")
 
 #  Location / Biomes
 Monster_Loc = [[SLIME, CBAT, SLIME_B],

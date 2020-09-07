@@ -240,7 +240,7 @@ FLOWER_5 = Items("Roses", "flower", "none", 0, 20,  True, 3, {}, {}, "A bouquet 
 NO = Items("NO", "NO", "NO", 0, 0, False, 0, {}, {}, "NO")
 
 #  Location / Biomes
-Forest_P = [HERB_1, HERB_2, FLOWER_1, FLOWER_2, FLOWER_3]
-Swamp_P = [HERB_2, HERB_3, HERB_4, FLOWER_3, FLOWER_4]
-Mountain_P = [HERB_5]
-Cave_P = [FLOWER_5]
+Location_P = [[HERB_1, HERB_2, FLOWER_1, FLOWER_2, FLOWER_3],
+              [HERB_2, HERB_3, HERB_4, FLOWER_3, FLOWER_4],
+              [HERB_5],
+              [FLOWER_5]]
